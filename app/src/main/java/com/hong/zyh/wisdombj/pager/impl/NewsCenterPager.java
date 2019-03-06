@@ -2,6 +2,7 @@ package com.hong.zyh.wisdombj.pager.impl;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -9,8 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.hong.zyh.wisdombj.MainActivity;
+import com.hong.zyh.wisdombj.fragment.LeftMenuFragment;
 import com.hong.zyh.wisdombj.global.GlobalConstants;
 import com.hong.zyh.wisdombj.pager.BasePager;
+import com.hong.zyh.wisdombj.utils.CacheUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -28,6 +32,7 @@ import domain.NewsMenu;
  */
 public class NewsCenterPager extends BasePager {
 
+    //mNewsData是通过Gson解析完的数据类
     private NewsMenu mNewsData;
 
     public NewsCenterPager(Activity activity) {
@@ -53,6 +58,12 @@ public class NewsCenterPager extends BasePager {
 		// 显示菜单按钮
 		btnMenu.setVisibility(View.VISIBLE);
 
+		//从缓存文件中获取数据
+        String cache = CacheUtils.getCache(GlobalConstants.CATEGORY_URL, mActivity);
+         //有数据就请求解析
+        if (!TextUtils.isEmpty(cache)){
+            processData(cache);
+        }
         // 请求服务器,获取数据
         // 开源框架: XUtils
         getDataFromServer();
@@ -93,5 +104,9 @@ public class NewsCenterPager extends BasePager {
         //参数1：jon原数据，相当于字符串  参数2：封装json数据的类
         mNewsData = gson.fromJson(json, NewsMenu.class);
         Toast.makeText(mActivity,mNewsData.toString(),Toast.LENGTH_SHORT).show();
+        MainActivity mainUI= (MainActivity) mActivity;
+        LeftMenuFragment leftMenuFragment = mainUI.getLeftMenuFragment();
+        //把获得的解析类传给侧滑面板。给侧边栏设置数据
+        leftMenuFragment.setMenuData(mNewsData.data);
     }
 }

@@ -2,8 +2,10 @@ package com.hong.zyh.wisdombj;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import com.hong.zyh.wisdombj.fragment.ContentFragment;
 import com.hong.zyh.wisdombj.fragment.LeftMenuFragment;
@@ -17,6 +19,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 public class MainActivity extends SlidingFragmentActivity {
     private static final String TAG_LEFT_MENU="LEFTMENUFRAGMENT";
     private static final String TAG_CONTENT="CONTENTFRAGMENT";
+    private LeftMenuFragment fragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,5 +50,17 @@ public class MainActivity extends SlidingFragmentActivity {
 
         //根据标记找到对应的fragment
         // Fragment fragment =fm.findFragmentByTag(TAG_LEFT_MENU);
+    }
+
+    public LeftMenuFragment getLeftMenuFragment(){
+        //获取FragmentManager对象，getSupportFragmentManager用这个方法可以支持的版本的
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        LeftMenuFragment fragment = (LeftMenuFragment) fragmentManager.findFragmentByTag(TAG_LEFT_MENU);
+        if (fragment==null){
+            Toast.makeText(this,"找到左侧面板",Toast.LENGTH_SHORT).show();
+            return null;
+        }else{
+            return fragment;
+        }
     }
 }
