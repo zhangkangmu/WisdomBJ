@@ -3,47 +3,44 @@ package com.hong.zyh.wisdombj.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.hong.zyh.wisdombj.SplashActivity;
+
 /**
- * SharePreference封装
- * 
- * @author shuaihong
- * @date 2019-03-05
+ * SharePreference封装,主要是用于判断向导页是否被开启过
+ * Created by shuaihong on 2019/3/4.
  */
+
 public class PrefUtils {
 
-	public static boolean getBoolean(Context ctx, String key, boolean defValue) {
-		SharedPreferences sp = ctx.getSharedPreferences("config",
-				Context.MODE_PRIVATE);
-		return sp.getBoolean(key, defValue);
-	}
+    public static void setBoolean(Context context, String key, boolean defValue) {
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        sp.edit().putBoolean(key,defValue).commit();
+    }
 
-	public static void setBoolean(Context ctx, String key, boolean value) {
-		SharedPreferences sp = ctx.getSharedPreferences("config",
-				Context.MODE_PRIVATE);
-		sp.edit().putBoolean(key, value).commit();
-	}
+    public static boolean getBoolean(Context context, String key, boolean defValue) {
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        return sp.getBoolean(key,defValue);
+    }
 
-	public static void setString(Context ctx, String key, String value) {
-		SharedPreferences sp = ctx.getSharedPreferences("config",
-				Context.MODE_PRIVATE);
-		sp.edit().putString(key, value).commit();
-	}
+    public static void setString(Context context, String key, String defValue) {
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        sp.edit().putString(key,defValue).commit();
+    }
 
-	public static String getString(Context ctx, String key, String defValue) {
-		SharedPreferences sp = ctx.getSharedPreferences("config",
-				Context.MODE_PRIVATE);
-		return sp.getString(key, defValue);
-	}
+    public static String getString(Context context, String key, String defValue) {
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        return sp.getString(key,defValue);
+    }
 
-	public static void setInt(Context ctx, String key, int value) {
-		SharedPreferences sp = ctx.getSharedPreferences("config",
-				Context.MODE_PRIVATE);
-		sp.edit().putInt(key, value).commit();
-	}
+    public static void setInt(Context context, String key, int defValue) {
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        sp.edit().putInt(key,defValue).commit();
+    }
 
-	public static int getInt(Context ctx, String key, int defValue) {
-		SharedPreferences sp = ctx.getSharedPreferences("config",
-				Context.MODE_PRIVATE);
-		return sp.getInt(key, defValue);
-	}
+    public static int getInt(Context context, String key, int defValue) {
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        return sp.getInt(key,defValue);
+    }
+
+
 }

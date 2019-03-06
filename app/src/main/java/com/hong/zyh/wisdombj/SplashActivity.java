@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
@@ -13,8 +12,8 @@ import android.widget.RelativeLayout;
 
 import com.hong.zyh.wisdombj.utils.PrefUtils;
 
-
 public class SplashActivity extends Activity {
+
     private RelativeLayout rlRoot;
 
     @Override
@@ -22,40 +21,56 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        rlRoot = (RelativeLayout) findViewById(R.id.rl_root);
+        rlRoot = findViewById(R.id.rl_root);
 
         // 旋转动画
-        RotateAnimation animRotate = new RotateAnimation(0, 360,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        animRotate.setDuration(1000);// 动画时间
-        animRotate.setFillAfter(true);// 保持动画结束状态
+        RotateAnimation rotateAnimation = new RotateAnimation(0, 360,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation.setDuration(1000);// 动画时间
+        rotateAnimation.setFillAfter(true);// 保持动画结束状态
 
         // 缩放动画
-        ScaleAnimation animScale = new ScaleAnimation(0, 1, 0, 1,
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0, 1, 0, 1,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
-        animScale.setDuration(1000);
-        animScale.setFillAfter(true);// 保持动画结束状态
+        scaleAnimation.setDuration(1000);
+        scaleAnimation.setFillAfter(true);// 保持动画结束状态)
 
         // 渐变动画
-        AlphaAnimation animAlpha = new AlphaAnimation(0, 1);
-        animAlpha.setDuration(2000);// 动画时间
-        animAlpha.setFillAfter(true);// 保持动画结束状态
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+        alphaAnimation.setDuration(2000);// 动画时间
+        alphaAnimation.setFillAfter(true);// 保持动画结束状态
 
-        // 动画集合
-        AnimationSet set = new AnimationSet(true);
-        set.addAnimation(animRotate);
-        set.addAnimation(animScale);
-        set.addAnimation(animAlpha);
+        // 动画集合,true代表是否让全部的动画都存在这个集合中
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(rotateAnimation);
+        animationSet.addAnimation(scaleAnimation);
+        animationSet.addAnimation(alphaAnimation);
 
         // 启动动画
-        rlRoot.startAnimation(set);
+        rlRoot.startAnimation(animationSet);
 
-        set.setAnimationListener(new AnimationListener() {
-
+        animationSet.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                //判断是否第一次打开，PrefUtils里封装了一个
+                boolean is_first_enter = PrefUtils.getBoolean(SplashActivity.this, "is_first_enter", true);
+                Intent intent;
+
+                if (is_first_enter) {
+                    intent = new Intent(getApplicationContext(), GuideActivity.class);
+                } else {
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                }
+                startActivity(intent);
+                finish();// 结束当前页面
 
             }
 
@@ -63,31 +78,6 @@ public class SplashActivity extends Activity {
             public void onAnimationRepeat(Animation animation) {
 
             }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                // 动画结束,跳转页面
-                // 如果是第一次进入, 跳新手引导
-                // 否则跳主页面
-                boolean isFirstEnter = PrefUtils.getBoolean(
-                        SplashActivity.this, "is_first_enter", true);
-
-                Intent intent;
-                if (isFirstEnter) {
-                    // 新手引导
-                    intent = new Intent(getApplicationContext(),
-                            GuideActivity.class);
-                } else {
-                    // 主页面
-                    intent = new Intent(getApplicationContext(),
-                            MainActivity.class);
-                }
-
-                startActivity(intent);
-
-                finish();// 结束当前页面
-            }
         });
     }
-
 }

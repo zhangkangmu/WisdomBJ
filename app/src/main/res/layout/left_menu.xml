@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--设置为空的让fragment替换-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_left_menu"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f00"
-    android:orientation="vertical" >
-    
+    android:layout_height="match_parent">
 
-</LinearLayout>
+</FrameLayout>
