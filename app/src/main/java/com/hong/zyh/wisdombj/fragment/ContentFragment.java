@@ -80,6 +80,25 @@ public class ContentFragment extends BaseFragment {
                 }
             }
         });
+
+        //viewpager页面完成监听，切换完成的时候才初始化数据，否则viewpager默认的自动缓左右两个页面的数据
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                BasePager basePager = mPagers.get(position);
+                basePager.initData();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
     //ViewPager的适配器
     class ContentAdapter extends PagerAdapter {
@@ -94,7 +113,8 @@ public class ContentFragment extends BaseFragment {
             BasePager basePager = mPagers.get(position);
             // 获取当前页面对象的布局
             View view = basePager.mRootView;
-            basePager.initData();
+            // basePager.initData();// 初始化数据, viewpager会默认加载下一个页面,
+            // 为了节省流量和性能,不要在此处调用初始化数据的方法
             //不要忘记这个addview了
             container.addView(view);
             return view;
