@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RadioGroup;
 
+import com.hong.zyh.wisdombj.MainActivity;
 import com.hong.zyh.wisdombj.R;
 import com.hong.zyh.wisdombj.pager.BasePager;
 import com.hong.zyh.wisdombj.pager.impl.GovAffairsPager;
@@ -14,6 +15,7 @@ import com.hong.zyh.wisdombj.pager.impl.HomePager;
 import com.hong.zyh.wisdombj.pager.impl.NewsCenterPager;
 import com.hong.zyh.wisdombj.pager.impl.SettingPager;
 import com.hong.zyh.wisdombj.pager.impl.SmartServicePager;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.util.ArrayList;
 
@@ -43,11 +45,15 @@ public class ContentFragment extends BaseFragment {
         mPagers = new ArrayList<BasePager>();
         mPagers.add(new HomePager(mActivity));
         mPagers.add(new NewsCenterPager(mActivity));
-        mPagers.add(new SettingPager(mActivity));
         mPagers.add(new SmartServicePager(mActivity));
         mPagers.add(new GovAffairsPager(mActivity));
+        mPagers.add(new SettingPager(mActivity));
 
         mViewPager.setAdapter(new ContentAdapter());
+
+        // 手动加载第一页数据
+        mPagers.get(0).initData();
+        setSlidingMenuEnable(false);
 
         rgGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -92,6 +98,13 @@ public class ContentFragment extends BaseFragment {
             public void onPageSelected(int position) {
                 BasePager basePager = mPagers.get(position);
                 basePager.initData();
+                if (position == 0 || position == mPagers.size() - 1) {
+                    // 首页和设置页要禁用侧边栏
+                    setSlidingMenuEnable(false);
+                } else {
+                    // 其他页面开启侧边栏
+                    setSlidingMenuEnable(true);
+                }
             }
 
             @Override
@@ -100,6 +113,18 @@ public class ContentFragment extends BaseFragment {
             }
         });
     }
+
+    protected void setSlidingMenuEnable(boolean enable) {
+        // 获取侧边栏对象
+        MainActivity mainUI = (MainActivity) mActivity;
+        SlidingMenu slidingMenu = mainUI.getSlidingMenu();
+        if (enable) {
+            slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        } else {
+            slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        }
+    }
+
     //ViewPager的适配器
     class ContentAdapter extends PagerAdapter {
 

@@ -37,8 +37,8 @@ public class NewsCenterPager extends BasePager {
 		// 修改页面标题
 		tvTitle.setText("新闻");
 
-		// 隐藏菜单按钮
-		btnMenu.setVisibility(View.GONE);
+		// 显示菜单按钮
+		btnMenu.setVisibility(View.VISIBLE);
 	}
 
 }
