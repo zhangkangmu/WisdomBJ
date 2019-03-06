@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hong.zyh.wisdombj.MainActivity;
 import com.hong.zyh.wisdombj.R;
+import com.hong.zyh.wisdombj.pager.impl.NewsCenterPager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -76,6 +77,8 @@ public class LeftMenuFragment extends BaseFragment {
 
                 // 收起侧边栏
                 toggle();
+                // 侧边栏点击之后, 要修改新闻中心的FrameLayout中的内容
+                setCurrentDetailPager(position);
             }
         });
 
@@ -88,6 +91,17 @@ public class LeftMenuFragment extends BaseFragment {
         MainActivity mainUI = (MainActivity) mActivity;
         SlidingMenu slidingMenu = mainUI.getSlidingMenu();
         slidingMenu.toggle();// 如果当前状态是开, 调用后就关; 反之亦然
+    }
+
+    public void setCurrentDetailPager(int currentDetailPager) {
+        // 获取新闻中心的对象
+        MainActivity mainUI = (MainActivity) mActivity;
+        // 获取ContentFragment
+        ContentFragment fragment = mainUI.getContentFragment();
+        // 获取NewsCenterPager
+        NewsCenterPager newsCenterPager = fragment.getNewsCenterPager();
+        // 修改新闻中心的FrameLayout的布局
+        newsCenterPager.setCurrentDetailPager(currentDetailPager);
     }
 
 

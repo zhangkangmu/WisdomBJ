@@ -52,12 +52,32 @@ public class MainActivity extends SlidingFragmentActivity {
         // Fragment fragment =fm.findFragmentByTag(TAG_LEFT_MENU);
     }
 
+    /**
+     * @return 左侧面板的Fragment对象
+     * 获取左侧面板的Fragment对象的方法
+     */
     public LeftMenuFragment getLeftMenuFragment(){
         //获取FragmentManager对象，getSupportFragmentManager用这个方法可以支持的版本的
         FragmentManager fragmentManager = getSupportFragmentManager();
         LeftMenuFragment fragment = (LeftMenuFragment) fragmentManager.findFragmentByTag(TAG_LEFT_MENU);
         if (fragment==null){
             Toast.makeText(this,"找到左侧面板",Toast.LENGTH_SHORT).show();
+            return null;
+        }else{
+            return fragment;
+        }
+    }
+
+    /**
+     * @return 主页面的Fragment对象
+     * 获取主页面的Fragment对象的方法
+     */
+    public ContentFragment getContentFragment(){
+        //获取FragmentManager对象，getSupportFragmentManager用这个方法可以支持的版本的
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ContentFragment fragment = (ContentFragment) fragmentManager.findFragmentByTag(TAG_CONTENT);
+        if (fragment==null){
+            Toast.makeText(this,"找到主面板",Toast.LENGTH_SHORT).show();
             return null;
         }else{
             return fragment;

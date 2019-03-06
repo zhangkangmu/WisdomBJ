@@ -155,4 +155,10 @@ public class ContentFragment extends BaseFragment {
             return view==object;
         }
     }
+
+    //获取新闻中心页面，主要是给其他页面调用来改变主页的布局，比如所左侧面板LeftMenuFragment调用
+    public NewsCenterPager getNewsCenterPager(){
+        NewsCenterPager basePager = (NewsCenterPager) mPagers.get(1);
+        return basePager;
+    }
 }

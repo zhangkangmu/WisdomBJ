@@ -13,7 +13,12 @@ import com.google.gson.Gson;
 import com.hong.zyh.wisdombj.MainActivity;
 import com.hong.zyh.wisdombj.fragment.LeftMenuFragment;
 import com.hong.zyh.wisdombj.global.GlobalConstants;
+import com.hong.zyh.wisdombj.pager.BaseMenuDetailPager;
 import com.hong.zyh.wisdombj.pager.BasePager;
+import com.hong.zyh.wisdombj.pager.menu.InteractMenuDetailPager;
+import com.hong.zyh.wisdombj.pager.menu.NewsMenuDetailPager;
+import com.hong.zyh.wisdombj.pager.menu.PhotosMenuDetailPager;
+import com.hong.zyh.wisdombj.pager.menu.TopicMenuDetailPager;
 import com.hong.zyh.wisdombj.utils.CacheUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -21,19 +26,23 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
+import java.util.ArrayList;
+
 import domain.NewsMenu;
 
 
 /**
- * 首页
+ * 新闻页面
  * 
- * @author Kevin
- * @date 2015-10-18
+ *  Created by shuaihong on 2019/3/7.
  */
 public class NewsCenterPager extends BasePager {
 
     //mNewsData是通过Gson解析完的数据类
     private NewsMenu mNewsData;
+
+    // 菜单详情页集合
+    private ArrayList<BaseMenuDetailPager> mMenuDetailPagers;
 
     public NewsCenterPager(Activity activity) {
 		super(activity);
@@ -103,10 +112,37 @@ public class NewsCenterPager extends BasePager {
         //mNewsData已经把所有的字段填充好了
         //参数1：jon原数据，相当于字符串  参数2：封装json数据的类
         mNewsData = gson.fromJson(json, NewsMenu.class);
-        Toast.makeText(mActivity,mNewsData.toString(),Toast.LENGTH_SHORT).show();
         MainActivity mainUI= (MainActivity) mActivity;
         LeftMenuFragment leftMenuFragment = mainUI.getLeftMenuFragment();
         //把获得的解析类传给侧滑面板。给侧边栏设置数据
         leftMenuFragment.setMenuData(mNewsData.data);
+
+        // 初始化4个菜单详情页
+        mMenuDetailPagers = new ArrayList<BaseMenuDetailPager>();
+        mMenuDetailPagers.add(new NewsMenuDetailPager(mActivity));
+        mMenuDetailPagers.add(new TopicMenuDetailPager(mActivity));
+        mMenuDetailPagers.add(new PhotosMenuDetailPager(mActivity));
+        mMenuDetailPagers.add(new InteractMenuDetailPager(mActivity));
+
+        // 将新闻菜单详情页设置为默认页面
+        setCurrentDetailPager(0);
+    }
+
+    /**
+     * 修改详情页布局，主要让其他类调用方便修改，比如说LeftMenuFragment调用
+     */
+    public void setCurrentDetailPager(int position) {
+        // 重新给frameLayout添加内容
+        BaseMenuDetailPager pager = mMenuDetailPagers.get(position);// 获取当前应该显示的页面
+        View view = pager.mRootView;// 当前页面的布局
+
+        // 清除之前旧的布局,一定要有这个方法，否则会重叠在一起
+        flContent.removeAllViews();
+        flContent.addView(view);// 给帧布局添加布局
+        // 初始化页面数据
+        pager.initData();
+
+        // 更新标题。是从网络数据中获得的
+        tvTitle.setText(mNewsData.data.get(position).title);
     }
 }
