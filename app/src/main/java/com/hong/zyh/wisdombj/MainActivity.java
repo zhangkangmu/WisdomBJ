@@ -29,7 +29,7 @@ public class MainActivity extends SlidingFragmentActivity {
         //全屏触摸
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         //屏幕预留200像素宽度,是主屏，不是侧滑的面板
-        slidingMenu.setBehindOffset(500);
+        slidingMenu.setBehindOffset(200);
 
         initFragment();
     }
