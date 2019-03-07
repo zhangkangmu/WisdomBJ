@@ -22,6 +22,12 @@ public class NoScrollViewPager extends ViewPager {
 	}
 
 	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		//不拦截子控件的事件
+		return false;
+	}
+
+	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		// 重写此方法, 触摸时什么都不做, 从而实现对滑动事件的禁用
 		return true;
