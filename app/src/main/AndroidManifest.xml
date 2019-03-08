@@ -20,7 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <!--此处可以更改PageIndicatorDefaults的样式，点进去就可以看到-->
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.PageIndicatorDefaults"></activity>
         <activity android:name=".GuideActivity"></activity>
     </application>
 

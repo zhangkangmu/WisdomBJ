@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--设置为空的让fragment替换-->
+<!--这里要设置背景为白色，否则会被viewPagerIndicator影响-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fl_main"
+    android:background="#FFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 </FrameLayout>
