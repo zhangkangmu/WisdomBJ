@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hong.zyh.wisdombj.MainActivity;
 import com.hong.zyh.wisdombj.R;
 import com.hong.zyh.wisdombj.pager.BaseMenuDetailPager;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.viewpagerindicator.TabPageIndicator;
@@ -33,7 +35,7 @@ import domain.NewsMenu;
  *
  * Created by shuaihong on 2019/3/7.
  */
-public class NewsMenuDetailPager extends BaseMenuDetailPager {
+public class NewsMenuDetailPager extends BaseMenuDetailPager implements ViewPager.OnPageChangeListener{
 
 	@ViewInject(R.id.vp_news_menu_detail)
 	ViewPager mViewPager;
@@ -70,6 +72,50 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager {
 		mViewPager.setAdapter(new NewsMenuDetailAdapter());
 		// 将viewpager和指示器绑定在一起.注意:必须在viewpager设置完数据之后再绑定
 		mIndicator.setViewPager(mViewPager);
+
+		//mViewPager.setOnPageChangeListener(this);
+		// 此处必须给指示器设置页面监听,不能设置给viewpagers，因为指示器已经个别mViewPager关联起来了
+		mIndicator.setOnPageChangeListener(this);
+	}
+
+	//页面滑动监听的方法start
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		System.out.println("当前位置:" + position);
+		if (position == 0) {
+			// 开启侧边栏
+			setSlidingMenuEnable(true);
+		} else {
+			// 禁用侧边栏
+			setSlidingMenuEnable(false);
+		}
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+
+	}
+	//页面滑动监听的方法end
+
+	/**
+	 * 开启或禁用侧边栏
+	 *
+	 * @param enable
+	 */
+	protected void setSlidingMenuEnable(boolean enable) {
+		// 获取侧边栏对象
+		MainActivity mainUI = (MainActivity) mActivity;
+		SlidingMenu slidingMenu = mainUI.getSlidingMenu();
+		if (enable) {
+			slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		} else {
+			slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+		}
 	}
 
 	class NewsMenuDetailAdapter extends PagerAdapter {
