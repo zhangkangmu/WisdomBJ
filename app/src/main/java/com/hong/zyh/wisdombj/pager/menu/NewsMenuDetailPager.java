@@ -15,6 +15,7 @@ import com.hong.zyh.wisdombj.pager.BaseMenuDetailPager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
@@ -153,5 +154,14 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager implements ViewPage
 		public boolean isViewFromObject(View view, Object object) {
 			return object==view;
 		}
+	}
+
+	//另外一种设计点击事件，xUtils里的方法
+	@OnClick(R.id.btn_next)
+	public void nextPager(View view){
+		// 跳到下个页面
+		int currentItem = mViewPager.getCurrentItem();
+		currentItem++;
+		mViewPager.setCurrentItem(currentItem);
 	}
 }
