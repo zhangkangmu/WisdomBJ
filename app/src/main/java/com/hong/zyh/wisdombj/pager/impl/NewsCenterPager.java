@@ -28,7 +28,7 @@ import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 import java.util.ArrayList;
 
-import domain.NewsMenu;
+import com.hong.zyh.wisdombj.domain.NewsMenu;
 
 
 /**

@@ -2,7 +2,6 @@ package com.hong.zyh.wisdombj.pager.menu;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +13,18 @@ import com.hong.zyh.wisdombj.R;
 import com.hong.zyh.wisdombj.global.GlobalConstants;
 import com.hong.zyh.wisdombj.pager.BaseMenuDetailPager;
 import com.hong.zyh.wisdombj.utils.CacheUtils;
+import com.hong.zyh.wisdombj.view.TopNewsViewPager;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 
-import domain.NewsTabBean;
-import domain.NewsMenu;
+import com.hong.zyh.wisdombj.domain.NewsTabBean;
+import com.hong.zyh.wisdombj.domain.NewsMenu;
 
 
 /**
@@ -39,7 +37,7 @@ public class TabDetailPager extends BaseMenuDetailPager {
 //    private TextView view;
 
     //头条新闻的viewpager id
-    private ViewPager mViewPager;
+    private TopNewsViewPager mViewPager;
     private final String mUrl;
     private ArrayList<NewsTabBean.TopNews> mTopnews;
 

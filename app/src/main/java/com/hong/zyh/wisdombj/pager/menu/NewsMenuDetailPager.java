@@ -1,13 +1,10 @@
 package com.hong.zyh.wisdombj.pager.menu;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.hong.zyh.wisdombj.MainActivity;
 import com.hong.zyh.wisdombj.R;
@@ -20,7 +17,7 @@ import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 
-import domain.NewsMenu;
+import com.hong.zyh.wisdombj.domain.NewsMenu;
 
 
 /**

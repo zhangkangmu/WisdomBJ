@@ -1,4 +1,4 @@
-package domain;
+package com.hong.zyh.wisdombj.domain;
 
 import java.util.ArrayList;
 

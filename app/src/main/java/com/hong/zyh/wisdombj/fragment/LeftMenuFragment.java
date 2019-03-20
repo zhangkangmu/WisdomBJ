@@ -17,7 +17,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 
-import domain.NewsMenu;
+import com.hong.zyh.wisdombj.domain.NewsMenu;
 
 /**
  * 侧边栏fragment
