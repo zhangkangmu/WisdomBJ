@@ -1,13 +1,31 @@
 package com.hong.zyh.wisdombj.pager.menu;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.view.Gravity;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.hong.zyh.wisdombj.R;
+import com.hong.zyh.wisdombj.global.GlobalConstants;
 import com.hong.zyh.wisdombj.pager.BaseMenuDetailPager;
+import com.hong.zyh.wisdombj.utils.CacheUtils;
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.lidroid.xutils.view.annotation.ViewInject;
 
+import java.util.ArrayList;
+
+import domain.NewsTabBean;
 import domain.NewsMenu;
 
 
@@ -18,24 +36,111 @@ import domain.NewsMenu;
 public class TabDetailPager extends BaseMenuDetailPager {
 
     private NewsMenu.NewsTabData mTabData;// 单个页签的网络数据
-    private TextView view;
+//    private TextView view;
+
+    //头条新闻的viewpager id
+    private ViewPager mViewPager;
+    private final String mUrl;
+    private ArrayList<NewsTabBean.TopNews> mTopnews;
 
     public TabDetailPager(Activity activity, NewsMenu.NewsTabData newsTabData) {
         super(activity);
         mTabData = newsTabData;
+        mUrl = GlobalConstants.SERVER_URL + mTabData.url;
     }
 
     @Override
     public View initView() {
-        view = new TextView(mActivity);
-        view.setTextColor(Color.RED);
-        view.setTextSize(22);
-        view.setGravity(Gravity.CENTER);
+        View view = View.inflate(mActivity, R.layout.pager_tab_detail,null);
+        mViewPager=view.findViewById(R.id.vp_top_news);
         return view;
     }
 
     @Override
     public void initData() {
-        view.setText(mTabData.title);
+        //给首次加载页面的时候设置缓存数据
+        String cache = CacheUtils.getCache(mUrl, mActivity);
+        if (!TextUtils.isEmpty(cache)){
+            processData(cache);
+        }
+        getDataFromServer();
+    }
+
+    public void getDataFromServer() {
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpMethod.GET,mUrl,new RequestCallBack<String>(){
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                String result = responseInfo.result;
+                processData(result);
+
+                //加载完了数据，就要进行缓存
+                CacheUtils.setCache(mUrl, result, mActivity);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String msg) {
+                // 请求失败
+                e.printStackTrace();
+                Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    protected void processData(String result) {
+        Gson gson = new Gson();
+        NewsTabBean newsTabBean = gson.fromJson(result, NewsTabBean.class);
+        // 头条新闻填充数据
+        mTopnews = newsTabBean.data.topnews;
+        if (mTopnews != null) {
+            mViewPager.setAdapter(new TopNewsAdapter());
+        }
+    }
+
+    // 头条新闻数据适配器
+    class TopNewsAdapter extends PagerAdapter {
+
+        private final BitmapUtils mBitmaoUtils;
+
+        public TopNewsAdapter(){
+            //使用BitmapUtils加载图片，有缓冲功能，加载更快
+            mBitmaoUtils = new BitmapUtils(mActivity);
+        }
+
+        @Override
+        public int getCount() {
+            return mTopnews.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView view = new ImageView(mActivity);
+            //设置默认头条新闻图片
+            //view.setImageResource(R.drawable.topnews_item_default);
+
+            //BitmaoUtils默认设置图片方式是setImageResource，所以不会填充满控件
+            //因此这里需要设置一个填充比例
+            view.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            //获取图片链接
+            String imgUrl=mTopnews.get(position).topimage;
+
+            //使用BitmaoUtils加载图片是为了防止内存溢出，因此需要利用BitmaoUtils设置缓存
+            // 参数：view ,图片下载链接
+            mBitmaoUtils.display(view,imgUrl);
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view==object;
+        }
     }
 }
