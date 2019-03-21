@@ -2,10 +2,12 @@ package com.hong.zyh.wisdombj.pager.menu;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 
 import com.hong.zyh.wisdombj.domain.NewsTabBean;
 import com.hong.zyh.wisdombj.domain.NewsMenu;
+import com.viewpagerindicator.CirclePageIndicator;
 
 
 /**
@@ -41,6 +44,10 @@ public class TabDetailPager extends BaseMenuDetailPager {
     private final String mUrl;
     private ArrayList<NewsTabBean.TopNews> mTopnews;
 
+    private TextView tv_topnew_title;
+    //指示器填充右下角的小圆点
+    private CirclePageIndicator mIndicator;
+
     public TabDetailPager(Activity activity, NewsMenu.NewsTabData newsTabData) {
         super(activity);
         mTabData = newsTabData;
@@ -51,6 +58,11 @@ public class TabDetailPager extends BaseMenuDetailPager {
     public View initView() {
         View view = View.inflate(mActivity, R.layout.pager_tab_detail,null);
         mViewPager=view.findViewById(R.id.vp_top_news);
+        //头条新闻标题
+        tv_topnew_title=view.findViewById(R.id.tv_topnew_title);
+        //指示器填充右下角的小圆点
+        mIndicator = view.findViewById(R.id.indicator);
+
         return view;
     }
 
@@ -93,6 +105,37 @@ public class TabDetailPager extends BaseMenuDetailPager {
         mTopnews = newsTabBean.data.topnews;
         if (mTopnews != null) {
             mViewPager.setAdapter(new TopNewsAdapter());
+
+            //默认显示第一条新闻标题
+            tv_topnew_title.setText(mTopnews.get(0).title);
+            //给指示器设置viewpager
+            mIndicator.setViewPager(mViewPager);
+            //设置快照方式展示
+            mIndicator.setSnap(true);
+
+            //默认让第一个选中，解决页面销毁后重新初始化，indicator依然保留上次原点的位置bug
+            mIndicator.onPageSelected(0);
+
+            //给新闻头条图片设置滑动事件，
+            mIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    //更新头条新闻标题
+                    NewsTabBean.TopNews topNews = mTopnews.get(position);
+                    tv_topnew_title.setText(topNews.title);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
         }
     }
 
@@ -104,6 +147,8 @@ public class TabDetailPager extends BaseMenuDetailPager {
         public TopNewsAdapter(){
             //使用BitmapUtils加载图片，有缓冲功能，加载更快
             mBitmaoUtils = new BitmapUtils(mActivity);
+            //设置加载中的图片，防止还没有加载出来的时候显示空白
+            mBitmaoUtils.configDefaultLoadingImage(R.drawable.topnews_item_default);
         }
 
         @Override

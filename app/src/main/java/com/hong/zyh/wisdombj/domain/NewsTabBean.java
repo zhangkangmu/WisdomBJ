@@ -34,5 +34,17 @@ public class NewsTabBean {
         public String title;
         public String type;
         public String url;
+
+        @Override
+        public String toString() {
+            return "TopNews{" +
+                    "id=" + id +
+                    ", topimage='" + topimage + '\'' +
+                    ", pubdate='" + pubdate + '\'' +
+                    ", title='" + title + '\'' +
+                    ", type='" + type + '\'' +
+                    ", url='" + url + '\'' +
+                    '}';
+        }
     }
 }

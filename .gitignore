@@ -11,10 +11,6 @@
 /app/build
 /app/app.iml
 /app/build.gradle
-/library/assets
-/library/bin
-/library/gen
-/library/.project
 /library
 /import-summary.txt
 /viewPagerIndicatorLibrary
