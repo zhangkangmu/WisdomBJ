@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <!--scaleType和background配合是为了有边框-->
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:scaleType="fitXY"
+        android:background="#a000"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_marginRight="4dp"
+        android:src="@drawable/image_demo"
+        android:padding="1dp"/>
+
+    <TextView
+        android:id="@+id/tv_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        android:layout_toRightOf="@+id/iv_icon"
+        android:ellipsize="end"
+        android:textSize="18sp" />
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_item_title"
+        android:layout_toRightOf="@+id/iv_icon"
+        android:textSize="16sp"
+        android:textColor="#8000"
+        android:text="2019-03-21"/>
+</RelativeLayout>

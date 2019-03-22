@@ -6,7 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,10 @@ public class TabDetailPager extends BaseMenuDetailPager {
     private TextView tv_topnew_title;
     //指示器填充右下角的小圆点
     private CirclePageIndicator mIndicator;
+    //新闻列表id
+    private ListView lv_list;
+    //列表新闻
+    private ArrayList<NewsTabBean.NewsData> mNewsList;
 
     public TabDetailPager(Activity activity, NewsMenu.NewsTabData newsTabData) {
         super(activity);
@@ -56,12 +62,19 @@ public class TabDetailPager extends BaseMenuDetailPager {
 
     @Override
     public View initView() {
-        View view = View.inflate(mActivity, R.layout.pager_tab_detail,null);
-        mViewPager=view.findViewById(R.id.vp_top_news);
+
+        View mHeaderView = View.inflate(mActivity, R.layout.list_item_header, null);
+        mViewPager=mHeaderView.findViewById(R.id.vp_top_news);
         //头条新闻标题
-        tv_topnew_title=view.findViewById(R.id.tv_topnew_title);
+        tv_topnew_title=mHeaderView.findViewById(R.id.tv_topnew_title);
         //指示器填充右下角的小圆点
-        mIndicator = view.findViewById(R.id.indicator);
+        mIndicator = mHeaderView.findViewById(R.id.indicator);
+        View view = View.inflate(mActivity, R.layout.pager_tab_detail,null);
+        //新闻列表id
+        lv_list = view.findViewById(R.id.lv_list);
+
+        //增加头布局,在找到listview后面增加
+        lv_list.addHeaderView(mHeaderView);
 
         return view;
     }
@@ -137,6 +150,12 @@ public class TabDetailPager extends BaseMenuDetailPager {
             });
 
         }
+
+        //列表新闻
+        mNewsList = newsTabBean.data.news;
+        if (mNewsList!=null){
+        lv_list.setAdapter(new NewsAdapter());
+        }
     }
 
     // 头条新闻数据适配器
@@ -185,5 +204,59 @@ public class TabDetailPager extends BaseMenuDetailPager {
         public boolean isViewFromObject(View view, Object object) {
             return view==object;
         }
+    }
+
+    class NewsAdapter extends BaseAdapter{
+
+        private final BitmapUtils mBitmapUtils;
+
+        public NewsAdapter() {
+            mBitmapUtils = new BitmapUtils(mActivity);
+            //默认加载这张照片
+            mBitmapUtils.configDefaultLoadingImage(R.drawable.news_pic_default);
+        }
+
+        @Override
+        public int getCount() {
+            return mNewsList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mNewsList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHold viewHold;
+            if (convertView==null){
+                viewHold=new ViewHold();
+                convertView=View.inflate(mActivity,R.layout.list_item_news,null);
+                viewHold.ivIcon=convertView.findViewById(R.id.iv_icon);
+                viewHold.tvTitle=convertView.findViewById(R.id.tv_item_title);
+                viewHold.tvDate=convertView.findViewById(R.id.tv_date);
+                convertView.setTag(viewHold);
+            }else{
+                viewHold= (ViewHold) convertView.getTag();
+            }
+
+            NewsTabBean.NewsData news = (NewsTabBean.NewsData) getItem(position);
+            viewHold.tvTitle.setText(news.title);
+            viewHold.tvDate.setText(news.pubdate);
+            //加载照片使用BitmapUtils
+            mBitmapUtils.display(viewHold.ivIcon,news.listimage);
+            return convertView;
+        }
+    }
+
+    public class ViewHold{
+        public ImageView ivIcon;
+        public TextView tvTitle;
+        public TextView tvDate;
     }
 }
