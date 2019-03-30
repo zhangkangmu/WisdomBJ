@@ -6,9 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +17,7 @@ import com.hong.zyh.wisdombj.R;
 import com.hong.zyh.wisdombj.global.GlobalConstants;
 import com.hong.zyh.wisdombj.pager.BaseMenuDetailPager;
 import com.hong.zyh.wisdombj.utils.CacheUtils;
+import com.hong.zyh.wisdombj.view.PullToRefreshListView;
 import com.hong.zyh.wisdombj.view.TopNewsViewPager;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -36,7 +37,7 @@ import com.viewpagerindicator.CirclePageIndicator;
  * Created by shuaihong on 2019/3/7.
  */
 
-public class TabDetailPager extends BaseMenuDetailPager {
+public class TabDetailPager extends BaseMenuDetailPager{
 
     private NewsMenu.NewsTabData mTabData;// 单个页签的网络数据
 //    private TextView view;
@@ -50,7 +51,7 @@ public class TabDetailPager extends BaseMenuDetailPager {
     //指示器填充右下角的小圆点
     private CirclePageIndicator mIndicator;
     //新闻列表id
-    private ListView lv_list;
+    private PullToRefreshListView lv_list;
     //列表新闻
     private ArrayList<NewsTabBean.NewsData> mNewsList;
 
@@ -75,6 +76,13 @@ public class TabDetailPager extends BaseMenuDetailPager {
 
         //增加头布局,在找到listview后面增加
         lv_list.addHeaderView(mHeaderView);
+        lv_list.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+           //刷新的时候需要做的事情
+                getDataFromServer();  //此处的方法会执行了刷新
+            }
+        });
 
         return view;
     }
@@ -100,12 +108,15 @@ public class TabDetailPager extends BaseMenuDetailPager {
 
                 //加载完了数据，就要进行缓存
                 CacheUtils.setCache(mUrl, result, mActivity);
+                // 隐藏下拉刷新控件
+                lv_list.onRefreshComplete(true);
             }
 
             @Override
             public void onFailure(HttpException e, String msg) {
                 // 请求失败
                 e.printStackTrace();
+                lv_list.onRefreshComplete(false);// 隐藏下拉刷新控件
                 Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
             }
         });
